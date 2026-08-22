@@ -130,7 +130,7 @@ export default function Intro({ onComplete }) {
           color: '#ffffff',
           lineHeight: 1,
         }}>
-          MOQS
+          moqs
         </div>
         <div className="moqs-sub" style={{
           fontSize: '0.75rem',
