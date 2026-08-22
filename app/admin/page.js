@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
-const ADMIN_PASSWORD = 'moqs2024'
+const ADMIN_PASSWORD = 'Camryv12!'
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false)
@@ -125,7 +125,7 @@ export default function AdminPage() {
             letterSpacing: '-0.02em',
             marginBottom: '3rem',
           }}>
-            MOQS Panel
+            moqs Panel
           </h1>
 
           <form onSubmit={handleLogin} style={{
@@ -210,7 +210,7 @@ export default function AdminPage() {
               fontWeight: '700',
               letterSpacing: '-0.02em',
             }}>
-              MOQS
+              moqs
             </h1>
           </div>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
