@@ -27,7 +27,7 @@ export default function PluginsPage() {
         zIndex: 1,
         maxWidth: '1100px',
         margin: '0 auto',
-        padding: '10rem 2rem 6rem',
+        padding: '10rem 1.25rem 6rem', // ← weniger padding auf mobile
       }}>
 
         {/* Header */}
@@ -68,7 +68,7 @@ export default function PluginsPage() {
           marginBottom: '3rem',
         }} />
 
-        {/* Loading */}
+        {/* Loading Skeleton */}
         {loading && (
           <div style={{
             display: 'flex',
@@ -112,101 +112,14 @@ export default function PluginsPage() {
                 No plugins available yet.
               </div>
             )}
+
             {plugins.map((plugin, i) => (
               <Link
                 key={plugin.slug}
                 href={`/plugins/${plugin.slug}`}
                 style={{ textDecoration: 'none' }}
               >
-                <div
-                  style={{
-                    background: '#080808',
-                    padding: '2rem 2.5rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '2rem',
-                    transition: 'background 0.2s ease',
-                    cursor: 'pointer',
-                  }}
-                  onMouseEnter={e => e.currentTarget.style.background = '#0f0f0f'}
-                  onMouseLeave={e => e.currentTarget.style.background = '#080808'}
-                >
-                  {/* Left */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-                    <span style={{
-                      color: '#222',
-                      fontSize: '0.85rem',
-                      fontWeight: '500',
-                      minWidth: '24px',
-                    }}>
-                      0{i + 1}
-                    </span>
-                    <div>
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '1rem',
-                        marginBottom: '0.4rem',
-                      }}>
-                        <h2 style={{
-                          color: '#ffffff',
-                          fontSize: '1.1rem',
-                          fontWeight: '600',
-                          letterSpacing: '-0.01em',
-                        }}>
-                          {plugin.name}
-                        </h2>
-                        <span style={{
-                          color: '#333',
-                          fontSize: '0.75rem',
-                          letterSpacing: '0.08em',
-                          textTransform: 'uppercase',
-                        }}>
-                          {plugin.tag}
-                        </span>
-                      </div>
-                      <p style={{
-                        color: '#444',
-                        fontSize: '0.85rem',
-                        lineHeight: 1.5,
-                        maxWidth: '500px',
-                      }}>
-                        {plugin.shortDescription}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Right */}
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '1.5rem',
-                    flexShrink: 0,
-                  }}>
-                    <span style={{
-                      color: '#333',
-                      fontSize: '0.75rem',
-                      letterSpacing: '0.08em',
-                    }}>
-                      VST3
-                    </span>
-                    <span style={{
-                      color: '#333',
-                      fontSize: '0.75rem',
-                      letterSpacing: '0.08em',
-                    }}>
-                      Windows
-                    </span>
-                    <span style={{
-                      color: '#ffffff',
-                      fontSize: '0.85rem',
-                      fontWeight: '500',
-                    }}>
-                      Free →
-                    </span>
-                  </div>
-                </div>
+                <PluginRow plugin={plugin} index={i} />
               </Link>
             ))}
           </div>
@@ -214,5 +127,118 @@ export default function PluginsPage() {
 
       </section>
     </main>
+  )
+}
+
+// ← Ausgelagert damit wir useState für hover + responsive nutzen können
+function PluginRow({ plugin, index }) {
+  const [hovered, setHovered] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: hovered ? '#0f0f0f' : '#080808',
+        padding: isMobile ? '1.25rem' : '2rem 2.5rem',
+        display: 'flex',
+        // ↓ Auf Mobile untereinander, auf Desktop nebeneinander
+        flexDirection: isMobile ? 'column' : 'row',
+        alignItems: isMobile ? 'flex-start' : 'center',
+        justifyContent: 'space-between',
+        gap: isMobile ? '1rem' : '2rem',
+        transition: 'background 0.2s ease',
+        cursor: 'pointer',
+      }}
+    >
+      {/* Left: Nummer + Name + Beschreibung */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.25rem' }}>
+        <span style={{
+          color: '#222',
+          fontSize: '0.85rem',
+          fontWeight: '500',
+          minWidth: '24px',
+          paddingTop: '2px',
+        }}>
+          0{index + 1}
+        </span>
+        <div>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            marginBottom: '0.4rem',
+            flexWrap: 'wrap', // ← falls tag zu lang
+          }}>
+            <h2 style={{
+              color: '#ffffff',
+              fontSize: '1.05rem',
+              fontWeight: '600',
+              letterSpacing: '-0.01em',
+              margin: 0,
+            }}>
+              {plugin.name}
+            </h2>
+            <span style={{
+              color: '#333',
+              fontSize: '0.75rem',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+            }}>
+              {plugin.tag}
+            </span>
+          </div>
+          <p style={{
+            color: '#444',
+            fontSize: '0.85rem',
+            lineHeight: 1.5,
+            maxWidth: '500px',
+            margin: 0,
+          }}>
+            {plugin.shortDescription}
+          </p>
+        </div>
+      </div>
+
+      {/* Right: Meta + CTA */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '1.5rem',
+        flexShrink: 0,
+        // ↓ Auf Mobile leicht eingerückt (unter Nummer)
+        paddingLeft: isMobile ? '2.25rem' : '0',
+      }}>
+        <span style={{
+          color: '#333',
+          fontSize: '0.75rem',
+          letterSpacing: '0.08em',
+        }}>
+          VST3
+        </span>
+        <span style={{
+          color: '#333',
+          fontSize: '0.75rem',
+          letterSpacing: '0.08em',
+        }}>
+          Windows
+        </span>
+        <span style={{
+          color: '#ffffff',
+          fontSize: '0.85rem',
+          fontWeight: '500',
+        }}>
+          Free →
+        </span>
+      </div>
+    </div>
   )
 }
