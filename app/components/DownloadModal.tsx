@@ -41,225 +41,319 @@ export default function DownloadModal({ plugin, onClose }) {
         }
 
         @keyframes slideUp {
-          from { transform: translate(-50%, -40%); opacity: 0; }
-          to { transform: translate(-50%, -50%); opacity: 1; }
+          from { transform: translateY(20px); opacity: 0; }
+          to { transform: translateY(0px); opacity: 1; }
+        }
+
+        /* ─── Desktop Modal ─── */
+        .modal-positioner {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 1000;
+          width: 100%;
+          max-width: 560px;        /* Breiter auf Desktop */
+          padding: 0 1.5rem;
         }
 
         .modal-box {
-          animation: slideUp 0.3s ease forwards;
+          background: #0f0f0f;
+          border: 1px solid #222;
+          border-radius: 20px;
+          overflow: hidden;
+          animation: slideUp 0.25s ease forwards;
         }
 
-        /* Auf sehr kleinen Screens: Modal nimmt fast ganzen Screen */
-        @media (max-width: 480px) {
-          .modal-wrapper {
-            top: auto !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            transform: none !important;
-            padding: 0 !important;
-            width: 100% !important;
-            max-width: 100% !important;
+        .modal-header {
+          padding: 2rem 2.2rem;
+          border-bottom: 1px solid #1a1a1a;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .modal-label {
+          color: #555;
+          font-size: 0.7rem;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+          margin-bottom: 0.4rem;
+        }
+
+        .modal-title {
+          color: #fff;
+          font-size: 1.3rem;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          margin: 0;
+        }
+
+        .modal-close {
+          background: #1a1a1a;
+          border: 1px solid #222;
+          border-radius: 8px;
+          color: #666;
+          font-size: 1rem;
+          cursor: pointer;
+          width: 36px;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
+          flex-shrink: 0;
+        }
+
+        .modal-close:hover {
+          background: #222;
+          color: #fff;
+          border-color: #333;
+        }
+
+        .modal-content {
+          padding: 2.2rem;
+        }
+
+        .status-box {
+          background: #080808;
+          border: 1px solid #1e1e1e;
+          border-radius: 12px;
+          padding: 1.4rem;
+          margin-bottom: 1.8rem;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
+
+        .pulse-dot {
+          width: 9px;
+          height: 9px;
+          border-radius: 50%;
+          background: #fff;
+          flex-shrink: 0;
+          animation: pulse 2s ease infinite;
+        }
+
+        .status-title {
+          color: #fff;
+          font-size: 0.95rem;
+          font-weight: 600;
+          margin-bottom: 0.25rem;
+        }
+
+        .status-sub {
+          color: #555;
+          font-size: 0.85rem;
+        }
+
+        .email-form {
+          display: flex;
+          flex-direction: column;
+          gap: 1px;
+          background: #1a1a1a;
+          border-radius: 12px;
+          overflow: hidden;
+          border: 1px solid #222;
+        }
+
+        .email-input {
+          background: #0a0a0a;
+          border: none;
+          padding: 1.1rem 1.4rem;
+          color: #fff;
+          font-size: 1rem;
+          outline: none;
+          font-family: inherit;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .email-input::placeholder {
+          color: #444;
+        }
+
+        .submit-btn {
+          background: #fff;
+          border: none;
+          padding: 1.1rem 1.4rem;
+          color: #080808;
+          font-size: 1rem;
+          font-weight: 700;
+          cursor: pointer;
+          font-family: inherit;
+          transition: background 0.2s ease, opacity 0.2s ease;
+          min-height: 52px;
+          letter-spacing: -0.01em;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+          background: #e0e0e0;
+        }
+
+        .submit-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .error-msg {
+          color: #ff5555;
+          font-size: 0.82rem;
+          margin-top: 0.9rem;
+        }
+
+        .fine-print {
+          color: #333;
+          font-size: 0.75rem;
+          margin-top: 1.2rem;
+          line-height: 1.6;
+        }
+
+        /* ─── Download Ready ─── */
+        .ready-box {
+          text-align: center;
+          padding: 1.5rem 0;
+        }
+
+        .ready-icon {
+          font-size: 3rem;
+          margin-bottom: 1.2rem;
+        }
+
+        .ready-title {
+          color: #fff;
+          font-size: 1.3rem;
+          font-weight: 700;
+          margin-bottom: 0.6rem;
+        }
+
+        .ready-sub {
+          color: #666;
+          font-size: 0.9rem;
+          line-height: 1.6;
+          margin-bottom: 2rem;
+        }
+
+        .download-btn {
+          background: #fff;
+          border: none;
+          border-radius: 12px;
+          padding: 1.1rem 2rem;
+          color: #080808;
+          font-weight: 700;
+          font-size: 1rem;
+          cursor: pointer;
+          width: 100%;
+          min-height: 52px;
+          transition: background 0.2s ease;
+          font-family: inherit;
+          letter-spacing: -0.01em;
+        }
+
+        .download-btn:hover {
+          background: #e0e0e0;
+        }
+
+        /* ─── Mobile: Bottom Sheet ─── */
+        @media (max-width: 600px) {
+          .modal-positioner {
+            top: auto;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            transform: none;
+            max-width: 100%;
+            padding: 0;
           }
 
           .modal-box {
-            border-radius: 20px 20px 0 0 !important;
-            animation: none !important;
+            border-radius: 24px 24px 0 0;
+            animation: slideUp 0.3s ease forwards;
+          }
+
+          .modal-header {
+            padding: 1.5rem 1.5rem;
+          }
+
+          .modal-title {
+            font-size: 1.1rem;
+          }
+
+          .modal-content {
+            padding: 1.5rem;
+            /* Verhindert, dass Content unter der iOS Home Bar endet */
+            padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
           }
         }
       `}</style>
 
       {/* Backdrop */}
-      <div onClick={onClose} style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'rgba(0,0,0,0.85)',
-        backdropFilter: 'blur(8px)',
-        zIndex: 999,
-      }} />
+      <div
+        onClick={onClose}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(0,0,0,0.85)',
+          backdropFilter: 'blur(8px)',
+          zIndex: 999,
+        }}
+      />
 
       {/* Modal */}
-      <div className="modal-wrapper" style={{
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        zIndex: 1000,
-        width: '100%',
-        maxWidth: '440px',
-        padding: '0 1rem',
-      }}>
-        <div className="modal-box" style={{
-          background: '#0f0f0f',
-          border: '1px solid #1a1a1a',
-          borderRadius: '16px',
-          overflow: 'hidden',
-        }}>
+      <div className="modal-positioner">
+        <div className="modal-box">
 
           {/* Header */}
-          <div style={{
-            padding: '1.5rem 1.8rem',
-            borderBottom: '1px solid #1a1a1a',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
+          <div className="modal-header">
             <div>
-              <p style={{
-                color: '#444',
-                fontSize: '0.7rem',
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                marginBottom: '0.3rem',
-              }}>
-                Free Download
-              </p>
-              <h3 style={{
-                color: '#ffffff',
-                fontSize: '1.1rem',
-                fontWeight: '600',
-                letterSpacing: '-0.01em',
-              }}>
-                {plugin.name}
-              </h3>
+              <p className="modal-label">Free Download</p>
+              <h3 className="modal-title">{plugin.name}</h3>
             </div>
-            <button onClick={onClose} style={{
-              background: 'none',
-              border: 'none',
-              color: '#444',
-              fontSize: '1.2rem',
-              cursor: 'pointer',
-              padding: '0.5rem',
-              transition: 'color 0.2s ease',
-              // Größere Touch-Target auf Mobile
-              minWidth: '44px',
-              minHeight: '44px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            onMouseEnter={e => (e.target as HTMLElement).style.color = '#fff'}
-            onMouseLeave={e => (e.target as HTMLElement).style.color = '#444'}>
-              ✕
-            </button>
+            <button className="modal-close" onClick={onClose}>✕</button>
           </div>
 
           {/* Content */}
-          <div style={{ padding: '1.8rem' }}>
+          <div className="modal-content">
             {!ready ? (
               <>
-                <div style={{
-                  background: '#080808',
-                  border: '1px solid #1a1a1a',
-                  borderRadius: '10px',
-                  padding: '1.2rem',
-                  marginBottom: '1.5rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '1rem',
-                }}>
-                  <div style={{
-                    width: '8px',
-                    height: '8px',
-                    borderRadius: '50%',
-                    background: '#ffffff',
-                    flexShrink: 0,
-                    animation: 'pulse 2s ease infinite',
-                  }} />
+                {/* Status Box */}
+                <div className="status-box">
+                  <div className="pulse-dot" />
                   <div>
-                    <p style={{
-                      color: '#ffffff',
-                      fontSize: '0.85rem',
-                      fontWeight: '600',
-                      marginBottom: '0.2rem',
-                    }}>
-                      Download is being prepared
-                    </p>
-                    <p style={{ color: '#444', fontSize: '0.8rem' }}>
-                      Enter your email to unlock it
-                    </p>
+                    <p className="status-title">Download is being prepared</p>
+                    <p className="status-sub">Enter your email to unlock it</p>
                   </div>
                 </div>
 
-                <form onSubmit={handleSubmit} style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '1px',
-                  background: '#1a1a1a',
-                  borderRadius: '10px',
-                  overflow: 'hidden',
-                }}>
+                {/* Form */}
+                <form onSubmit={handleSubmit} className="email-form">
                   <input
                     type="email"
                     placeholder="your@email.com"
                     required
                     value={email}
                     onChange={e => setEmail(e.target.value)}
-                    style={{
-                      background: '#080808',
-                      border: 'none',
-                      padding: '1rem 1.2rem',
-                      color: '#ffffff',
-                      fontSize: '1rem', // Größer auf Mobile → kein auto-zoom iOS
-                      outline: 'none',
-                      fontFamily: 'inherit',
-                    }}
+                    className="email-input"
                   />
                   <button
                     type="submit"
                     disabled={loading}
-                    style={{
-                      background: '#ffffff',
-                      border: 'none',
-                      padding: '1rem 1.2rem',
-                      color: '#080808',
-                      fontSize: '0.9rem',
-                      fontWeight: '600',
-                      cursor: loading ? 'not-allowed' : 'pointer',
-                      fontFamily: 'inherit',
-                      opacity: loading ? 0.7 : 1,
-                      transition: 'all 0.2s ease',
-                      minHeight: '48px', // Touch-friendly
-                    }}
+                    className="submit-btn"
                   >
                     {loading ? 'Unlocking...' : 'Unlock Download →'}
                   </button>
                 </form>
 
-                {error && (
-                  <p style={{ color: '#ff4444', fontSize: '0.8rem', marginTop: '0.8rem' }}>
-                    {error}
-                  </p>
-                )}
+                {error && <p className="error-msg">{error}</p>}
 
-                <p style={{
-                  color: '#333',
-                  fontSize: '0.75rem',
-                  marginTop: '1rem',
-                  lineHeight: 1.5,
-                }}>
-                  No spam. Unsubscribe anytime.
-                </p>
+                <p className="fine-print">No spam. Unsubscribe anytime.</p>
               </>
             ) : (
-              <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-                <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🎛️</div>
-                <h4 style={{
-                  color: '#ffffff',
-                  fontSize: '1.1rem',
-                  fontWeight: '600',
-                  marginBottom: '0.5rem',
-                }}>
-                  Download Unlocked!
-                </h4>
-                <p style={{
-                  color: '#666',
-                  fontSize: '0.85rem',
-                  lineHeight: 1.6,
-                  marginBottom: '1.5rem',
-                }}>
-                  Your download is ready.
-                </p>
+              /* Download Ready */
+              <div className="ready-box">
+                <div className="ready-icon">🎛️</div>
+                <h4 className="ready-title">Download Unlocked!</h4>
+                <p className="ready-sub">Your download is ready.</p>
                 <a
                   href={plugin.downloadUrl}
                   target="_blank"
@@ -277,19 +371,7 @@ export default function DownloadModal({ plugin, onClose }) {
                     })
                   }}
                 >
-                  <button style={{
-                    background: '#ffffff',
-                    border: 'none',
-                    borderRadius: '10px',
-                    padding: '0.9rem 2rem',
-                    color: '#080808',
-                    fontWeight: '600',
-                    fontSize: '0.95rem',
-                    cursor: 'pointer',
-                    width: '100%',
-                    minHeight: '48px',
-                    transition: 'all 0.2s ease',
-                  }}>
+                  <button className="download-btn">
                     ↓ Download {plugin.name}
                   </button>
                 </a>
