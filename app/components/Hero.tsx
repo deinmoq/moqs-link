@@ -29,10 +29,10 @@ export default function Hero() {
         }
 
         .stat-item:hover {
-          border-color: #333 !important;
+          background: #0f0f0f !important;
         }
 
-        /* Stats: 2x2 Grid auf Mobile */
+        /* ── Stats Grid ── */
         .stats-grid {
           display: flex;
           gap: 1px;
@@ -42,33 +42,59 @@ export default function Hero() {
           overflow: hidden;
         }
 
+        /* ── Button Wrapper ── */
+        .hero-btn-link {
+          text-decoration: none;
+          display: flex;           /* ← Fix: Button füllt Link korrekt */
+        }
+
+        .hero-cta,
+        .hero-cta-outline {
+          width: 100%;
+          white-space: nowrap;
+        }
+
+        /* ── Mobile ── */
         @media (max-width: 480px) {
           .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
+            width: 100%;
+            max-width: 320px;
           }
 
+          /* Buttons: untereinander, volle Breite */
           .hero-buttons {
-            flex-direction: column;
+            flex-direction: column !important;
+            align-items: center !important;
             width: 100%;
             max-width: 280px;
+          }
+
+          .hero-btn-link {
+            width: 100%;
           }
 
           .hero-cta,
           .hero-cta-outline {
             width: 100%;
             text-align: center;
+            justify-content: center;
           }
 
-          .hero-badge {
-            font-size: 0.65rem !important;
-            padding: 0.3rem 0.8rem !important;
+          .stat-item {
+            padding: 1rem 0.8rem !important;
           }
         }
 
-        @media (max-width: 640px) {
-          .stat-item {
-            padding: 1rem 1.2rem !important;
+        @media (min-width: 481px) {
+          .hero-btn-link {
+            width: auto;
+          }
+
+          .hero-cta,
+          .hero-cta-outline {
+            width: auto;
           }
         }
       `}</style>
@@ -86,7 +112,7 @@ export default function Hero() {
       }}>
 
         {/* Badge */}
-        <div className="hero-badge" style={{
+        <div style={{
           display: 'inline-flex',
           alignItems: 'center',
           gap: '0.5rem',
@@ -109,6 +135,7 @@ export default function Hero() {
             fontSize: '0.75rem',
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
+            whiteSpace: 'nowrap',
           }}>
             Free VST3 Plugins for Producers
           </span>
@@ -143,17 +170,22 @@ export default function Hero() {
           Free. Forever.
         </p>
 
-        {/* Buttons */}
-        <div className="hero-buttons" style={{
-          display: 'flex',
-          gap: '1rem',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          marginBottom: '5rem',
-          opacity: visible ? 1 : 0,
-          animation: visible ? 'fadeUp 0.6s ease 0.3s forwards' : 'none',
-        }}>
-          <Link href="/plugins" style={{ textDecoration: 'none', width: '100%', maxWidth: '200px' }}>
+        {/* ── Buttons ── */}
+        <div
+          className="hero-buttons"
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: '1rem',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: '5rem',
+            opacity: visible ? 1 : 0,
+            animation: visible ? 'fadeUp 0.6s ease 0.3s forwards' : 'none',
+          }}
+        >
+          {/* ← display:flex auf Link, kein width:100% auf Desktop */}
+          <Link href="/plugins" className="hero-btn-link">
             <button className="hero-cta" style={{
               background: '#ffffff',
               border: 'none',
@@ -165,13 +197,12 @@ export default function Hero() {
               cursor: 'pointer',
               letterSpacing: '0.03em',
               transition: 'all 0.2s ease',
-              width: '100%',
             }}>
               Browse Plugins
             </button>
           </Link>
 
-          <Link href="/about" style={{ textDecoration: 'none', width: '100%', maxWidth: '200px' }}>
+          <Link href="/about" className="hero-btn-link">
             <button className="hero-cta-outline" style={{
               background: 'transparent',
               border: '1px solid #1a1a1a',
@@ -183,30 +214,36 @@ export default function Hero() {
               cursor: 'pointer',
               letterSpacing: '0.03em',
               transition: 'all 0.2s ease',
-              width: '100%',
             }}>
               about moq
             </button>
           </Link>
         </div>
 
-        {/* Stats */}
-        <div className="stats-grid" style={{
-          opacity: visible ? 1 : 0,
-          animation: visible ? 'fadeUp 0.6s ease 0.4s forwards' : 'none',
-        }}>
+        {/* ── Stats ── */}
+        <div
+          className="stats-grid"
+          style={{
+            opacity: visible ? 1 : 0,
+            animation: visible ? 'fadeUp 0.6s ease 0.4s forwards' : 'none',
+          }}
+        >
           {[
-            { number: '3', label: 'Plugins' },
-            { number: '100%', label: 'Free' },
-            { number: 'VST3', label: 'Format' },
-            { number: 'WIN', label: 'Windows' },
+            { number: '3',    label: 'Plugins' },
+            { number: '100%', label: 'Free'    },
+            { number: 'VST3', label: 'Format'  },
+            { number: 'WIN',  label: 'Windows' },
           ].map((stat) => (
-            <div key={stat.label} className="stat-item" style={{
-              background: '#080808',
-              padding: '1.2rem 2rem',
-              textAlign: 'center',
-              transition: 'background 0.2s ease',
-            }}>
+            <div
+              key={stat.label}
+              className="stat-item"
+              style={{
+                background: '#080808',
+                padding: '1.2rem 2rem',
+                textAlign: 'center',
+                transition: 'background 0.2s ease',
+              }}
+            >
               <div style={{
                 fontSize: '1.3rem',
                 fontWeight: '700',
