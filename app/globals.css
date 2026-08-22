@@ -22,6 +22,7 @@ body {
   -webkit-font-smoothing: antialiased;
   font-size: 16px;
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
 ::selection {
@@ -48,4 +49,24 @@ p {
 
 h1, h2, h3, h4 {
   color: #ffffff;
+}
+
+/* ─── RESPONSIVE UTILITIES ─── */
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Mobile: < 640px */
+@media (max-width: 640px) {
+  body {
+    font-size: 14px;
+  }
+
+  p {
+    font-size: 0.9rem;
+  }
 }
