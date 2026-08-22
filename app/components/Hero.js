@@ -84,7 +84,7 @@ export default function Hero() {
           opacity: visible ? 1 : 0,
           animation: visible ? 'fadeUp 0.6s ease 0.1s forwards' : 'none',
         }}>
-          MOQS
+          moqs
         </h1>
 
         {/* Subtitle */}
@@ -141,7 +141,7 @@ export default function Hero() {
               letterSpacing: '0.03em',
               transition: 'all 0.2s ease',
             }}>
-              About MOQ
+              about moq
             </button>
           </Link>
         </div>
