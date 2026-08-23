@@ -94,7 +94,6 @@ export default function Navbar() {
 
         .ig-btn {
           color: #666;
-          transition: color 0.2s ease;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -119,6 +118,7 @@ export default function Navbar() {
           gap: 0.6rem;
           font-size: 1rem;
           transition: color 0.2s ease;
+          text-decoration: none;
         }
 
         .ig-btn-mobile:hover {
@@ -182,17 +182,6 @@ export default function Navbar() {
             About
           </Link>
 
-          {/* Instagram Icon Desktop */}
-          <a
-            href="https://instagram.com/vstbymoq"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ig-btn"
-            aria-label="Instagram"
-          >
-            <InstagramIcon />
-          </a>
-
           <Link href="/plugins" style={{ textDecoration: 'none' }}>
             <button
               style={{
@@ -213,6 +202,17 @@ export default function Navbar() {
               Get Plugins
             </button>
           </Link>
+
+          {/* Instagram Icon Desktop - ganz rechts */}
+          <a
+            href="https://instagram.com/vstbymoq"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ig-btn"
+            aria-label="Instagram"
+          >
+            <InstagramIcon />
+          </a>
         </div>
 
         {/* Hamburger */}
@@ -277,7 +277,6 @@ export default function Navbar() {
           rel="noopener noreferrer"
           className="ig-btn-mobile"
           onClick={() => setMenuOpen(false)}
-          style={{ textDecoration: 'none' }}
         >
           <InstagramIcon />
           <span>@vstbymoq</span>
