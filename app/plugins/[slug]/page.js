@@ -1,7 +1,7 @@
 'use client'
 
-import ParticleBackground from '../components/ParticleBackground'
-import DownloadModal from '../components/DownloadModal'
+import ParticleBackground from '../../components/ParticleBackground'
+import DownloadModal from '../../components/DownloadModal'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
@@ -115,8 +115,9 @@ export default function PluginPage({ params }) {
           marginBottom: '4rem',
           transition: 'color 0.2s ease',
         }}
-        onMouseEnter={e => e.target.style.color = '#fff'}
-        onMouseLeave={e => e.target.style.color = '#444'}>
+        onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+        onMouseLeave={e => e.currentTarget.style.color = '#444'}
+        >
           ← All Plugins
         </Link>
 
@@ -165,8 +166,8 @@ export default function PluginPage({ params }) {
               whiteSpace: 'nowrap',
               alignSelf: 'flex-end',
             }}
-            onMouseEnter={e => e.target.style.background = '#e0e0e0'}
-            onMouseLeave={e => e.target.style.background = '#ffffff'}
+            onMouseEnter={e => e.currentTarget.style.background = '#e0e0e0'}
+            onMouseLeave={e => e.currentTarget.style.background = '#ffffff'}
           >
             ↓ Free Download
           </button>
@@ -361,4 +362,5 @@ export default function PluginPage({ params }) {
 
     </main>
   )
+}
 }
