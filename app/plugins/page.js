@@ -1,7 +1,7 @@
 'use client'
 
-import ParticleBackground from '../../components/ParticleBackground'
-import DownloadModal from '../../components/DownloadModal'
+import ParticleBackground from '../components/ParticleBackground'
+import DownloadModal from '../components/DownloadModal'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
