@@ -41,23 +41,23 @@ export default function DownloadModal({ plugin, onClose }) {
         }
 
         @keyframes slideUp {
-          from { transform: translateY(20px); opacity: 0; }
-          to { transform: translateY(0px); opacity: 1; }
+          from { transform: translateY(16px); opacity: 0; }
+          to   { transform: translateY(0px);  opacity: 1; }
         }
 
-        /* ─── Desktop Modal ─── */
-        .modal-positioner {
+        .dm-positioner {
           position: fixed;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
           z-index: 1000;
           width: 100%;
-          max-width: 560px;        /* Breiter auf Desktop */
+          max-width: 580px;
           padding: 0 1.5rem;
+          box-sizing: border-box;
         }
 
-        .modal-box {
+        .dm-box {
           background: #0f0f0f;
           border: 1px solid #222;
           border-radius: 20px;
@@ -65,39 +65,41 @@ export default function DownloadModal({ plugin, onClose }) {
           animation: slideUp 0.25s ease forwards;
         }
 
-        .modal-header {
-          padding: 2rem 2.2rem;
+        .dm-header {
+          padding: 2rem 2.4rem;
           border-bottom: 1px solid #1a1a1a;
           display: flex;
           align-items: center;
           justify-content: space-between;
+          gap: 1rem;
         }
 
-        .modal-label {
+        .dm-label {
           color: #555;
           font-size: 0.7rem;
           letter-spacing: 0.15em;
           text-transform: uppercase;
           margin-bottom: 0.4rem;
+          margin-top: 0;
         }
 
-        .modal-title {
+        .dm-title {
           color: #fff;
-          font-size: 1.3rem;
+          font-size: 1.4rem;
           font-weight: 700;
           letter-spacing: -0.02em;
           margin: 0;
         }
 
-        .modal-close {
+        .dm-close {
           background: #1a1a1a;
-          border: 1px solid #222;
+          border: 1px solid #2a2a2a;
           border-radius: 8px;
           color: #666;
           font-size: 1rem;
           cursor: pointer;
-          width: 36px;
-          height: 36px;
+          width: 38px;
+          height: 38px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -105,17 +107,17 @@ export default function DownloadModal({ plugin, onClose }) {
           flex-shrink: 0;
         }
 
-        .modal-close:hover {
+        .dm-close:hover {
           background: #222;
           color: #fff;
           border-color: #333;
         }
 
-        .modal-content {
-          padding: 2.2rem;
+        .dm-content {
+          padding: 2.4rem;
         }
 
-        .status-box {
+        .dm-status {
           background: #080808;
           border: 1px solid #1e1e1e;
           border-radius: 12px;
@@ -126,7 +128,7 @@ export default function DownloadModal({ plugin, onClose }) {
           gap: 1rem;
         }
 
-        .pulse-dot {
+        .dm-dot {
           width: 9px;
           height: 9px;
           border-radius: 50%;
@@ -135,19 +137,21 @@ export default function DownloadModal({ plugin, onClose }) {
           animation: pulse 2s ease infinite;
         }
 
-        .status-title {
+        .dm-status-title {
           color: #fff;
           font-size: 0.95rem;
           font-weight: 600;
           margin-bottom: 0.25rem;
+          margin-top: 0;
         }
 
-        .status-sub {
+        .dm-status-sub {
           color: #555;
           font-size: 0.85rem;
+          margin: 0;
         }
 
-        .email-form {
+        .dm-form {
           display: flex;
           flex-direction: column;
           gap: 1px;
@@ -157,10 +161,10 @@ export default function DownloadModal({ plugin, onClose }) {
           border: 1px solid #222;
         }
 
-        .email-input {
+        .dm-input {
           background: #0a0a0a;
           border: none;
-          padding: 1.1rem 1.4rem;
+          padding: 1.15rem 1.4rem;
           color: #fff;
           font-size: 1rem;
           outline: none;
@@ -169,94 +173,88 @@ export default function DownloadModal({ plugin, onClose }) {
           box-sizing: border-box;
         }
 
-        .email-input::placeholder {
-          color: #444;
-        }
+        .dm-input::placeholder { color: #444; }
 
-        .submit-btn {
+        .dm-submit {
           background: #fff;
           border: none;
-          padding: 1.1rem 1.4rem;
+          padding: 1.15rem 1.4rem;
           color: #080808;
           font-size: 1rem;
           font-weight: 700;
           cursor: pointer;
           font-family: inherit;
           transition: background 0.2s ease, opacity 0.2s ease;
-          min-height: 52px;
+          min-height: 54px;
           letter-spacing: -0.01em;
         }
 
-        .submit-btn:hover:not(:disabled) {
-          background: #e0e0e0;
-        }
+        .dm-submit:hover:not(:disabled) { background: #e0e0e0; }
+        .dm-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        .submit-btn:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-        }
-
-        .error-msg {
+        .dm-error {
           color: #ff5555;
           font-size: 0.82rem;
           margin-top: 0.9rem;
+          margin-bottom: 0;
         }
 
-        .fine-print {
+        .dm-fine {
           color: #333;
           font-size: 0.75rem;
           margin-top: 1.2rem;
+          margin-bottom: 0;
           line-height: 1.6;
         }
 
-        /* ─── Download Ready ─── */
-        .ready-box {
+        /* Ready state */
+        .dm-ready {
           text-align: center;
           padding: 1.5rem 0;
         }
 
-        .ready-icon {
+        .dm-ready-icon {
           font-size: 3rem;
           margin-bottom: 1.2rem;
         }
 
-        .ready-title {
+        .dm-ready-title {
           color: #fff;
           font-size: 1.3rem;
           font-weight: 700;
           margin-bottom: 0.6rem;
+          margin-top: 0;
         }
 
-        .ready-sub {
+        .dm-ready-sub {
           color: #666;
           font-size: 0.9rem;
           line-height: 1.6;
           margin-bottom: 2rem;
+          margin-top: 0;
         }
 
-        .download-btn {
+        .dm-dl-btn {
           background: #fff;
           border: none;
           border-radius: 12px;
-          padding: 1.1rem 2rem;
+          padding: 1.15rem 2rem;
           color: #080808;
           font-weight: 700;
           font-size: 1rem;
           cursor: pointer;
           width: 100%;
-          min-height: 52px;
+          min-height: 54px;
           transition: background 0.2s ease;
           font-family: inherit;
           letter-spacing: -0.01em;
         }
 
-        .download-btn:hover {
-          background: #e0e0e0;
-        }
+        .dm-dl-btn:hover { background: #e0e0e0; }
 
-        /* ─── Mobile: Bottom Sheet ─── */
+        /* Mobile: bottom sheet */
         @media (max-width: 600px) {
-          .modal-positioner {
+          .dm-positioner {
             top: auto;
             bottom: 0;
             left: 0;
@@ -266,23 +264,21 @@ export default function DownloadModal({ plugin, onClose }) {
             padding: 0;
           }
 
-          .modal-box {
+          .dm-box {
             border-radius: 24px 24px 0 0;
-            animation: slideUp 0.3s ease forwards;
           }
 
-          .modal-header {
-            padding: 1.5rem 1.5rem;
+          .dm-header {
+            padding: 1.5rem 1.6rem;
           }
 
-          .modal-title {
-            font-size: 1.1rem;
+          .dm-title {
+            font-size: 1.15rem;
           }
 
-          .modal-content {
-            padding: 1.5rem;
-            /* Verhindert, dass Content unter der iOS Home Bar endet */
-            padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+          .dm-content {
+            padding: 1.6rem;
+            padding-bottom: calc(1.6rem + env(safe-area-inset-bottom));
           }
         }
       `}</style>
@@ -300,60 +296,52 @@ export default function DownloadModal({ plugin, onClose }) {
       />
 
       {/* Modal */}
-      <div className="modal-positioner">
-        <div className="modal-box">
+      <div className="dm-positioner">
+        <div className="dm-box">
 
           {/* Header */}
-          <div className="modal-header">
+          <div className="dm-header">
             <div>
-              <p className="modal-label">Free Download</p>
-              <h3 className="modal-title">{plugin.name}</h3>
+              <p className="dm-label">Free Download</p>
+              <h3 className="dm-title">{plugin.name}</h3>
             </div>
-            <button className="modal-close" onClick={onClose}>✕</button>
+            <button className="dm-close" onClick={onClose}>✕</button>
           </div>
 
           {/* Content */}
-          <div className="modal-content">
+          <div className="dm-content">
             {!ready ? (
               <>
-                {/* Status Box */}
-                <div className="status-box">
-                  <div className="pulse-dot" />
+                <div className="dm-status">
+                  <div className="dm-dot" />
                   <div>
-                    <p className="status-title">Download is being prepared</p>
-                    <p className="status-sub">Enter your email to unlock it</p>
+                    <p className="dm-status-title">Download is being prepared</p>
+                    <p className="dm-status-sub">Enter your email to unlock it</p>
                   </div>
                 </div>
 
-                {/* Form */}
-                <form onSubmit={handleSubmit} className="email-form">
+                <form onSubmit={handleSubmit} className="dm-form">
                   <input
                     type="email"
                     placeholder="your@email.com"
                     required
                     value={email}
                     onChange={e => setEmail(e.target.value)}
-                    className="email-input"
+                    className="dm-input"
                   />
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="submit-btn"
-                  >
+                  <button type="submit" disabled={loading} className="dm-submit">
                     {loading ? 'Unlocking...' : 'Unlock Download →'}
                   </button>
                 </form>
 
-                {error && <p className="error-msg">{error}</p>}
-
-                <p className="fine-print">No spam. Unsubscribe anytime.</p>
+                {error && <p className="dm-error">{error}</p>}
+                <p className="dm-fine">No spam. Unsubscribe anytime.</p>
               </>
             ) : (
-              /* Download Ready */
-              <div className="ready-box">
-                <div className="ready-icon">🎛️</div>
-                <h4 className="ready-title">Download Unlocked!</h4>
-                <p className="ready-sub">Your download is ready.</p>
+              <div className="dm-ready">
+                <div className="dm-ready-icon">🎛️</div>
+                <h4 className="dm-ready-title">Download Unlocked!</h4>
+                <p className="dm-ready-sub">Your download is ready.</p>
                 <a
                   href={plugin.downloadUrl}
                   target="_blank"
@@ -371,7 +359,7 @@ export default function DownloadModal({ plugin, onClose }) {
                     })
                   }}
                 >
-                  <button className="download-btn">
+                  <button className="dm-dl-btn">
                     ↓ Download {plugin.name}
                   </button>
                 </a>
