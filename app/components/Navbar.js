@@ -13,7 +13,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Schließe Menu bei Resize zu Desktop
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 640) setMenuOpen(false)
@@ -124,34 +123,39 @@ export default function Navbar() {
 
         {/* Desktop Links */}
         <div className="nav-links">
-          <Link href="/about" style={{
-            color: '#666',
-            textDecoration: 'none',
-            fontSize: '0.9rem',
-            fontWeight: '400',
-            letterSpacing: '0.05em',
-            transition: 'color 0.2s ease',
-          }}
-          onMouseEnter={e => e.currentTarget.style.color = '#fff'}
-		  onMouseLeave={e => e.currentTarget.style.color = '#666'}
+          <Link
+            href="/about"
+            style={{
+              color: '#666',
+              textDecoration: 'none',
+              fontSize: '0.9rem',
+              fontWeight: '400',
+              letterSpacing: '0.05em',
+              transition: 'color 0.2s ease',
+            }}
+            onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+            onMouseLeave={e => e.currentTarget.style.color = '#666'}
+          >
             About
           </Link>
 
           <Link href="/plugins" style={{ textDecoration: 'none' }}>
-            <button style={{
-              background: '#ffffff',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '0.5rem 1.2rem',
-              color: '#080808',
-              fontWeight: '600',
-              fontSize: '0.85rem',
-              cursor: 'pointer',
-              letterSpacing: '0.03em',
-              transition: 'all 0.2s ease',
-            }}
-			onMouseEnter={e => e.currentTarget.style.background = '#e0e0e0'}
-			onMouseLeave={e => e.currentTarget.style.background = '#ffffff'}
+            <button
+              style={{
+                background: '#ffffff',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '0.5rem 1.2rem',
+                color: '#080808',
+                fontWeight: '600',
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                letterSpacing: '0.03em',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={e => e.currentTarget.style.background = '#e0e0e0'}
+              onMouseLeave={e => e.currentTarget.style.background = '#ffffff'}
+            >
               Get Plugins
             </button>
           </Link>
@@ -183,13 +187,17 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <Link href="/about" onClick={() => setMenuOpen(false)} style={{
-          color: '#666',
-          textDecoration: 'none',
-          fontSize: '1.2rem',
-          fontWeight: '400',
-          letterSpacing: '0.05em',
-        }}>
+        <Link
+          href="/about"
+          onClick={() => setMenuOpen(false)}
+          style={{
+            color: '#666',
+            textDecoration: 'none',
+            fontSize: '1.2rem',
+            fontWeight: '400',
+            letterSpacing: '0.05em',
+          }}
+        >
           About
         </Link>
 
