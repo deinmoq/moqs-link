@@ -5,6 +5,20 @@ import Link from 'next/link'
 
 const ADMIN_PASSWORD = 'Camryv12!'
 
+function getBadge(plugin) {
+  const now = new Date()
+  const tenDays = 10 * 24 * 60 * 60 * 1000
+  if (plugin.isNew) {
+    const d = new Date(plugin.isNew)
+    if (!isNaN(d) && now - d < tenDays) return 'new'
+  }
+  if (plugin.isUpdated) {
+    const d = new Date(plugin.isUpdated)
+    if (!isNaN(d) && now - d < tenDays) return 'updated'
+  }
+  return null
+}
+
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false)
   const [password, setPassword] = useState('')
@@ -15,6 +29,8 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false)
   const [editPlugin, setEditPlugin] = useState(null)
   const [showAddPlugin, setShowAddPlugin] = useState(false)
+  const [dragOver, setDragOver] = useState(null)
+  const [dragging, setDragging] = useState(null)
   const [newPlugin, setNewPlugin] = useState({
     slug: '',
     name: '',
@@ -31,9 +47,7 @@ export default function AdminPage() {
   })
 
   useEffect(() => {
-    if (authed) {
-      fetchData()
-    }
+    if (authed) fetchData()
   }, [authed])
 
   const fetchData = async () => {
@@ -94,6 +108,56 @@ export default function AdminPage() {
     fetchData()
   }
 
+  const handleMarkBadge = async (slug, badge) => {
+    await fetch('/api/plugins', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: badge === 'new' ? 'markNew' : 'markUpdated', slug }),
+    })
+    fetchData()
+  }
+
+  const handleClearBadge = async (slug, badge) => {
+    await fetch('/api/plugins', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'clearBadge', slug, badge }),
+    })
+    fetchData()
+  }
+
+  // Drag & Drop
+  const handleDragStart = (slug) => setDragging(slug)
+  const handleDragOver = (e, slug) => {
+    e.preventDefault()
+    setDragOver(slug)
+  }
+  const handleDrop = async (targetSlug) => {
+    if (!dragging || dragging === targetSlug) {
+      setDragging(null)
+      setDragOver(null)
+      return
+    }
+
+    const newOrder = [...plugins]
+    const fromIdx = newOrder.findIndex(p => p.slug === dragging)
+    const toIdx = newOrder.findIndex(p => p.slug === targetSlug)
+    const [moved] = newOrder.splice(fromIdx, 1)
+    newOrder.splice(toIdx, 0, moved)
+    setPlugins(newOrder)
+    setDragging(null)
+    setDragOver(null)
+
+    await fetch('/api/plugins', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'reorderPlugins',
+        slugs: newOrder.map(p => p.slug),
+      }),
+    })
+  }
+
   // Login Screen
   if (!authed) {
     return (
@@ -105,10 +169,7 @@ export default function AdminPage() {
         background: '#080808',
         padding: '2rem',
       }}>
-        <div style={{
-          width: '100%',
-          maxWidth: '360px',
-        }}>
+        <div style={{ width: '100%', maxWidth: '360px' }}>
           <p style={{
             color: '#444',
             fontSize: '0.75rem',
@@ -151,19 +212,16 @@ export default function AdminPage() {
                 fontFamily: 'inherit',
               }}
             />
-            <button
-              type="submit"
-              style={{
-                background: '#ffffff',
-                border: 'none',
-                padding: '1rem 1.2rem',
-                color: '#080808',
-                fontSize: '0.9rem',
-                fontWeight: '600',
-                cursor: 'pointer',
-                fontFamily: 'inherit',
-              }}
-            >
+            <button type="submit" style={{
+              background: '#ffffff',
+              border: 'none',
+              padding: '1rem 1.2rem',
+              color: '#080808',
+              fontSize: '0.9rem',
+              fontWeight: '600',
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+            }}>
               Login →
             </button>
           </form>
@@ -179,11 +237,7 @@ export default function AdminPage() {
   }
 
   return (
-    <main style={{
-      minHeight: '100vh',
-      background: '#080808',
-      padding: '2rem',
-    }}>
+    <main style={{ minHeight: '100vh', background: '#080808', padding: '2rem' }}>
       <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
 
         {/* Header */}
@@ -214,11 +268,7 @@ export default function AdminPage() {
             </h1>
           </div>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <Link href="/" style={{
-              color: '#444',
-              textDecoration: 'none',
-              fontSize: '0.85rem',
-            }}>
+            <Link href="/" style={{ color: '#444', textDecoration: 'none', fontSize: '0.85rem' }}>
               ← Website
             </Link>
             <button
@@ -255,10 +305,7 @@ export default function AdminPage() {
             { label: 'Emails collected', value: emails.length },
             { label: 'Live', value: plugins.filter(p => p.visible === 'true' || p.visible === true).length },
           ].map((stat) => (
-            <div key={stat.label} style={{
-              background: '#080808',
-              padding: '1.5rem',
-            }}>
+            <div key={stat.label} style={{ background: '#080808', padding: '1.5rem' }}>
               <div style={{
                 color: '#ffffff',
                 fontSize: '1.8rem',
@@ -321,9 +368,13 @@ export default function AdminPage() {
               <div>
                 <div style={{
                   display: 'flex',
-                  justifyContent: 'flex-end',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
                   marginBottom: '1rem',
                 }}>
+                  <p style={{ color: '#444', fontSize: '0.8rem', margin: 0 }}>
+                    ↕ Drag to reorder · order is reflected on the website
+                  </p>
                   <button
                     onClick={() => setShowAddPlugin(true)}
                     style={{
@@ -351,102 +402,219 @@ export default function AdminPage() {
                   borderRadius: '12px',
                   overflow: 'hidden',
                 }}>
-                  {plugins.map((plugin) => (
-                    <div key={plugin.slug} style={{
-                      background: '#080808',
-                      padding: '1.5rem 2rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      gap: '1rem',
-                      flexWrap: 'wrap',
-                    }}>
-                      <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.3rem' }}>
-                          <h3 style={{
-                            color: '#ffffff',
-                            fontSize: '1rem',
-                            fontWeight: '600',
-                          }}>
-                            {plugin.name}
-                          </h3>
-                          <span style={{
-                            color: '#333',
-                            fontSize: '0.75rem',
-                            letterSpacing: '0.08em',
-                          }}>
-                            {plugin.version}
-                          </span>
-                          <span style={{
-                            background: (plugin.visible === true || plugin.visible === 'true') ? 'rgba(0,255,0,0.1)' : 'rgba(255,0,0,0.1)',
-                            border: `1px solid ${(plugin.visible === true || plugin.visible === 'true') ? 'rgba(0,255,0,0.3)' : 'rgba(255,0,0,0.3)'}`,
-                            borderRadius: '100px',
-                            padding: '0.15rem 0.6rem',
-                            color: (plugin.visible === true || plugin.visible === 'true') ? '#00ff00' : '#ff4444',
-                            fontSize: '0.7rem',
-                          }}>
-                            {(plugin.visible === true || plugin.visible === 'true') ? 'Live' : 'Hidden'}
-                          </span>
-                        </div>
-                        <p style={{
-                          color: '#444',
-                          fontSize: '0.8rem',
-                        }}>
-                          {plugin.slug}
-                        </p>
-                      </div>
+                  {plugins.map((plugin) => {
+                    const badge = getBadge(plugin)
+                    return (
+                      <div
+                        key={plugin.slug}
+                        draggable
+                        onDragStart={() => handleDragStart(plugin.slug)}
+                        onDragOver={(e) => handleDragOver(e, plugin.slug)}
+                        onDrop={() => handleDrop(plugin.slug)}
+                        onDragEnd={() => { setDragging(null); setDragOver(null) }}
+                        style={{
+                          background: dragOver === plugin.slug ? '#111' : '#080808',
+                          padding: '1.5rem 2rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: '1rem',
+                          flexWrap: 'wrap',
+                          cursor: 'grab',
+                          opacity: dragging === plugin.slug ? 0.4 : 1,
+                          transition: 'all 0.15s ease',
+                          borderLeft: dragOver === plugin.slug ? '2px solid #333' : '2px solid transparent',
+                        }}
+                      >
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.3rem', flexWrap: 'wrap' }}>
+                            {/* Drag Handle */}
+                            <span style={{ color: '#333', fontSize: '0.9rem', cursor: 'grab' }}>⠿</span>
 
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
-                        <button
-                          onClick={() => handleToggleVisible(plugin.slug, plugin.visible === true || plugin.visible === 'true')}
-                          style={{
-                            background: 'transparent',
-                            border: '1px solid #1a1a1a',
-                            borderRadius: '8px',
-                            padding: '0.5rem 1rem',
-                            color: '#666',
-                            fontSize: '0.8rem',
-                            cursor: 'pointer',
-                            fontFamily: 'inherit',
-                          }}
-                        >
-                          {(plugin.visible === true || plugin.visible === 'true') ? 'Hide' : 'Show'}
-                        </button>
-                        <button
-                          onClick={() => setEditPlugin(plugin)}
-                          style={{
-                            background: 'transparent',
-                            border: '1px solid #1a1a1a',
-                            borderRadius: '8px',
-                            padding: '0.5rem 1rem',
-                            color: '#666',
-                            fontSize: '0.8rem',
-                            cursor: 'pointer',
-                            fontFamily: 'inherit',
-                          }}
-                        >
-                          Edit
-                        </button>
-                        <Link
-                          href={`/plugins/${plugin.slug}`}
-                          target="_blank"
-                          style={{
-                            background: 'transparent',
-                            border: '1px solid #1a1a1a',
-                            borderRadius: '8px',
-                            padding: '0.5rem 1rem',
-                            color: '#666',
-                            fontSize: '0.8rem',
-                            textDecoration: 'none',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                          }}
-                        >
-                          View →
-                        </Link>
+                            <h3 style={{ color: '#ffffff', fontSize: '1rem', fontWeight: '600', margin: 0 }}>
+                              {plugin.name}
+                            </h3>
+                            <span style={{ color: '#333', fontSize: '0.75rem', letterSpacing: '0.08em' }}>
+                              {plugin.version}
+                            </span>
+
+                            {/* Live/Hidden Badge */}
+                            <span style={{
+                              background: (plugin.visible === true || plugin.visible === 'true') ? 'rgba(0,255,0,0.1)' : 'rgba(255,0,0,0.1)',
+                              border: `1px solid ${(plugin.visible === true || plugin.visible === 'true') ? 'rgba(0,255,0,0.3)' : 'rgba(255,0,0,0.3)'}`,
+                              borderRadius: '100px',
+                              padding: '0.15rem 0.6rem',
+                              color: (plugin.visible === true || plugin.visible === 'true') ? '#00ff00' : '#ff4444',
+                              fontSize: '0.7rem',
+                            }}>
+                              {(plugin.visible === true || plugin.visible === 'true') ? 'Live' : 'Hidden'}
+                            </span>
+
+                            {/* New Badge */}
+                            {badge === 'new' && (
+                              <span style={{
+                                background: 'rgba(255,255,255,0.08)',
+                                border: '1px solid rgba(255,255,255,0.15)',
+                                borderRadius: '100px',
+                                padding: '0.15rem 0.6rem',
+                                color: '#fff',
+                                fontSize: '0.7rem',
+                              }}>
+                                New
+                              </span>
+                            )}
+
+                            {/* Updated Badge */}
+                            {badge === 'updated' && (
+                              <span style={{
+                                background: 'rgba(100,180,255,0.08)',
+                                border: '1px solid rgba(100,180,255,0.2)',
+                                borderRadius: '100px',
+                                padding: '0.15rem 0.6rem',
+                                color: '#64b4ff',
+                                fontSize: '0.7rem',
+                              }}>
+                                Updated
+                              </span>
+                            )}
+
+                            {/* Downloads */}
+                            {Number(plugin.downloads) > 0 && (
+                              <span style={{ color: '#333', fontSize: '0.75rem' }}>
+                                ↓ {Number(plugin.downloads).toLocaleString()}
+                              </span>
+                            )}
+                          </div>
+                          <p style={{ color: '#444', fontSize: '0.8rem', margin: 0 }}>
+                            {plugin.slug}
+                          </p>
+                        </div>
+
+                        {/* Actions */}
+                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                          {/* Mark New */}
+                          {badge !== 'new' ? (
+                            <button
+                              onClick={() => handleMarkBadge(plugin.slug, 'new')}
+                              style={{
+                                background: 'transparent',
+                                border: '1px solid #1a1a1a',
+                                borderRadius: '8px',
+                                padding: '0.5rem 1rem',
+                                color: '#666',
+                                fontSize: '0.8rem',
+                                cursor: 'pointer',
+                                fontFamily: 'inherit',
+                              }}
+                            >
+                              Mark New
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handleClearBadge(plugin.slug, 'new')}
+                              style={{
+                                background: 'transparent',
+                                border: '1px solid rgba(255,255,255,0.15)',
+                                borderRadius: '8px',
+                                padding: '0.5rem 1rem',
+                                color: '#fff',
+                                fontSize: '0.8rem',
+                                cursor: 'pointer',
+                                fontFamily: 'inherit',
+                              }}
+                            >
+                              Clear New
+                            </button>
+                          )}
+
+                          {/* Mark Updated */}
+                          {badge !== 'updated' ? (
+                            <button
+                              onClick={() => handleMarkBadge(plugin.slug, 'updated')}
+                              style={{
+                                background: 'transparent',
+                                border: '1px solid #1a1a1a',
+                                borderRadius: '8px',
+                                padding: '0.5rem 1rem',
+                                color: '#666',
+                                fontSize: '0.8rem',
+                                cursor: 'pointer',
+                                fontFamily: 'inherit',
+                              }}
+                            >
+                              Mark Updated
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handleClearBadge(plugin.slug, 'updated')}
+                              style={{
+                                background: 'transparent',
+                                border: '1px solid rgba(100,180,255,0.2)',
+                                borderRadius: '8px',
+                                padding: '0.5rem 1rem',
+                                color: '#64b4ff',
+                                fontSize: '0.8rem',
+                                cursor: 'pointer',
+                                fontFamily: 'inherit',
+                              }}
+                            >
+                              Clear Updated
+                            </button>
+                          )}
+
+                          <button
+                            onClick={() => handleToggleVisible(plugin.slug, plugin.visible === true || plugin.visible === 'true')}
+                            style={{
+                              background: 'transparent',
+                              border: '1px solid #1a1a1a',
+                              borderRadius: '8px',
+                              padding: '0.5rem 1rem',
+                              color: '#666',
+                              fontSize: '0.8rem',
+                              cursor: 'pointer',
+                              fontFamily: 'inherit',
+                            }}
+                          >
+                            {(plugin.visible === true || plugin.visible === 'true') ? 'Hide' : 'Show'}
+                          </button>
+
+                          <button
+                            onClick={() => setEditPlugin(plugin)}
+                            style={{
+                              background: 'transparent',
+                              border: '1px solid #1a1a1a',
+                              borderRadius: '8px',
+                              padding: '0.5rem 1rem',
+                              color: '#666',
+                              fontSize: '0.8rem',
+                              cursor: 'pointer',
+                              fontFamily: 'inherit',
+                            }}
+                          >
+                            Edit
+                          </button>
+
+                          <Link
+                            href={`/plugins/${plugin.slug}`}
+                            target="_blank"
+                            style={{
+                              background: 'transparent',
+                              border: '1px solid #1a1a1a',
+                              borderRadius: '8px',
+                              padding: '0.5rem 1rem',
+                              color: '#666',
+                              fontSize: '0.8rem',
+                              textDecoration: 'none',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                            }}
+                          >
+                            View →
+                          </Link>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               </div>
             )}
@@ -482,15 +650,9 @@ export default function AdminPage() {
                       justifyContent: 'space-between',
                       gap: '1rem',
                     }}>
-                      <span style={{ color: '#ffffff', fontSize: '0.9rem' }}>
-                        {entry.Email}
-                      </span>
-                      <span style={{ color: '#444', fontSize: '0.8rem' }}>
-                        {entry.Plugin}
-                      </span>
-                      <span style={{ color: '#333', fontSize: '0.8rem' }}>
-                        {entry.Date}
-                      </span>
+                      <span style={{ color: '#ffffff', fontSize: '0.9rem' }}>{entry.Email}</span>
+                      <span style={{ color: '#444', fontSize: '0.8rem' }}>{entry.Plugin}</span>
+                      <span style={{ color: '#333', fontSize: '0.8rem' }}>{entry.Date}</span>
                     </div>
                   ))
                 )}
@@ -502,60 +664,40 @@ export default function AdminPage() {
         {/* Edit Plugin Modal */}
         {editPlugin && (
           <>
-            <div
-              onClick={() => setEditPlugin(null)}
-              style={{
-                position: 'fixed',
-                inset: 0,
-                background: 'rgba(0,0,0,0.85)',
-                backdropFilter: 'blur(8px)',
-                zIndex: 999,
-              }}
-            />
+            <div onClick={() => setEditPlugin(null)} style={{
+              position: 'fixed', inset: 0,
+              background: 'rgba(0,0,0,0.85)',
+              backdropFilter: 'blur(8px)', zIndex: 999,
+            }} />
             <div style={{
-              position: 'fixed',
-              top: '50%',
-              left: '50%',
+              position: 'fixed', top: '50%', left: '50%',
               transform: 'translate(-50%, -50%)',
-              zIndex: 1000,
-              width: '100%',
-              maxWidth: '600px',
-              padding: '0 1rem',
-              maxHeight: '90vh',
-              overflowY: 'auto',
+              zIndex: 1000, width: '100%', maxWidth: '600px',
+              padding: '0 1rem', maxHeight: '90vh', overflowY: 'auto',
             }}>
               <div style={{
-                background: '#0f0f0f',
-                border: '1px solid #1a1a1a',
-                borderRadius: '16px',
-                overflow: 'hidden',
+                background: '#0f0f0f', border: '1px solid #1a1a1a',
+                borderRadius: '16px', overflow: 'hidden',
               }}>
                 <div style={{
-                  padding: '1.5rem 1.8rem',
-                  borderBottom: '1px solid #1a1a1a',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
+                  padding: '1.5rem 1.8rem', borderBottom: '1px solid #1a1a1a',
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                 }}>
-                  <h3 style={{ color: '#ffffff', fontWeight: '600' }}>
+                  <h3 style={{ color: '#ffffff', fontWeight: '600', margin: 0 }}>
                     Edit – {editPlugin.name}
                   </h3>
-                  <button
-                    onClick={() => setEditPlugin(null)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: '#444',
-                      fontSize: '1.2rem',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    ✕
-                  </button>
+                  <button onClick={() => setEditPlugin(null)} style={{
+                    background: 'none', border: 'none', color: '#444',
+                    fontSize: '1.2rem', cursor: 'pointer',
+                  }}>✕</button>
                 </div>
 
                 <form onSubmit={handleUpdatePlugin} style={{ padding: '1.8rem' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: '#1a1a1a', borderRadius: '10px', overflow: 'hidden', marginBottom: '1rem' }}>
+                  <div style={{
+                    display: 'flex', flexDirection: 'column', gap: '1px',
+                    background: '#1a1a1a', borderRadius: '10px',
+                    overflow: 'hidden', marginBottom: '1rem',
+                  }}>
                     {[
                       { label: 'Name', key: 'name' },
                       { label: 'Tag', key: 'tag' },
@@ -564,24 +706,17 @@ export default function AdminPage() {
                       { label: 'Download URL', key: 'downloadUrl' },
                       { label: 'Image URL', key: 'image' },
                     ].map(field => (
-                      <div key={field.key}>
-                        <input
-                          placeholder={field.label}
-                          value={editPlugin[field.key] || ''}
-                          onChange={e => setEditPlugin({ ...editPlugin, [field.key]: e.target.value })}
-                          style={{
-                            width: '100%',
-                            background: '#080808',
-                            border: 'none',
-                            padding: '0.9rem 1.2rem',
-                            color: '#ffffff',
-                            fontSize: '0.85rem',
-                            outline: 'none',
-                            fontFamily: 'inherit',
-                            boxSizing: 'border-box',
-                          }}
-                        />
-                      </div>
+                      <input
+                        key={field.key}
+                        placeholder={field.label}
+                        value={editPlugin[field.key] || ''}
+                        onChange={e => setEditPlugin({ ...editPlugin, [field.key]: e.target.value })}
+                        style={{
+                          width: '100%', background: '#080808', border: 'none',
+                          padding: '0.9rem 1.2rem', color: '#ffffff', fontSize: '0.85rem',
+                          outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box',
+                        }}
+                      />
                     ))}
                     <textarea
                       placeholder="Description"
@@ -589,14 +724,9 @@ export default function AdminPage() {
                       onChange={e => setEditPlugin({ ...editPlugin, description: e.target.value })}
                       rows={4}
                       style={{
-                        background: '#080808',
-                        border: 'none',
-                        padding: '0.9rem 1.2rem',
-                        color: '#ffffff',
-                        fontSize: '0.85rem',
-                        outline: 'none',
-                        fontFamily: 'inherit',
-                        resize: 'none',
+                        background: '#080808', border: 'none', padding: '0.9rem 1.2rem',
+                        color: '#ffffff', fontSize: '0.85rem', outline: 'none',
+                        fontFamily: 'inherit', resize: 'none',
                       }}
                     />
                     <textarea
@@ -605,33 +735,18 @@ export default function AdminPage() {
                       onChange={e => setEditPlugin({ ...editPlugin, features: e.target.value })}
                       rows={3}
                       style={{
-                        background: '#080808',
-                        border: 'none',
-                        padding: '0.9rem 1.2rem',
-                        color: '#ffffff',
-                        fontSize: '0.85rem',
-                        outline: 'none',
-                        fontFamily: 'inherit',
-                        resize: 'none',
+                        background: '#080808', border: 'none', padding: '0.9rem 1.2rem',
+                        color: '#ffffff', fontSize: '0.85rem', outline: 'none',
+                        fontFamily: 'inherit', resize: 'none',
                       }}
                     />
                   </div>
 
-                  <button
-                    type="submit"
-                    style={{
-                      background: '#ffffff',
-                      border: 'none',
-                      borderRadius: '8px',
-                      padding: '0.9rem 1.5rem',
-                      color: '#080808',
-                      fontWeight: '600',
-                      fontSize: '0.9rem',
-                      cursor: 'pointer',
-                      fontFamily: 'inherit',
-                      width: '100%',
-                    }}
-                  >
+                  <button type="submit" style={{
+                    background: '#ffffff', border: 'none', borderRadius: '8px',
+                    padding: '0.9rem 1.5rem', color: '#080808', fontWeight: '600',
+                    fontSize: '0.9rem', cursor: 'pointer', fontFamily: 'inherit', width: '100%',
+                  }}>
                     Save Changes →
                   </button>
                 </form>
@@ -643,64 +758,44 @@ export default function AdminPage() {
         {/* Add Plugin Modal */}
         {showAddPlugin && (
           <>
-            <div
-              onClick={() => setShowAddPlugin(false)}
-              style={{
-                position: 'fixed',
-                inset: 0,
-                background: 'rgba(0,0,0,0.85)',
-                backdropFilter: 'blur(8px)',
-                zIndex: 999,
-              }}
-            />
+            <div onClick={() => setShowAddPlugin(false)} style={{
+              position: 'fixed', inset: 0,
+              background: 'rgba(0,0,0,0.85)',
+              backdropFilter: 'blur(8px)', zIndex: 999,
+            }} />
             <div style={{
-              position: 'fixed',
-              top: '50%',
-              left: '50%',
+              position: 'fixed', top: '50%', left: '50%',
               transform: 'translate(-50%, -50%)',
-              zIndex: 1000,
-              width: '100%',
-              maxWidth: '600px',
-              padding: '0 1rem',
-              maxHeight: '90vh',
-              overflowY: 'auto',
+              zIndex: 1000, width: '100%', maxWidth: '600px',
+              padding: '0 1rem', maxHeight: '90vh', overflowY: 'auto',
             }}>
               <div style={{
-                background: '#0f0f0f',
-                border: '1px solid #1a1a1a',
-                borderRadius: '16px',
-                overflow: 'hidden',
+                background: '#0f0f0f', border: '1px solid #1a1a1a',
+                borderRadius: '16px', overflow: 'hidden',
               }}>
                 <div style={{
-                  padding: '1.5rem 1.8rem',
-                  borderBottom: '1px solid #1a1a1a',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
+                  padding: '1.5rem 1.8rem', borderBottom: '1px solid #1a1a1a',
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                 }}>
-                  <h3 style={{ color: '#ffffff', fontWeight: '600' }}>
+                  <h3 style={{ color: '#ffffff', fontWeight: '600', margin: 0 }}>
                     Add New Plugin
                   </h3>
-                  <button
-                    onClick={() => setShowAddPlugin(false)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: '#444',
-                      fontSize: '1.2rem',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    ✕
-                  </button>
+                  <button onClick={() => setShowAddPlugin(false)} style={{
+                    background: 'none', border: 'none', color: '#444',
+                    fontSize: '1.2rem', cursor: 'pointer',
+                  }}>✕</button>
                 </div>
 
                 <form onSubmit={handleAddPlugin} style={{ padding: '1.8rem' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: '#1a1a1a', borderRadius: '10px', overflow: 'hidden', marginBottom: '1rem' }}>
+                  <div style={{
+                    display: 'flex', flexDirection: 'column', gap: '1px',
+                    background: '#1a1a1a', borderRadius: '10px',
+                    overflow: 'hidden', marginBottom: '1rem',
+                  }}>
                     {[
-                      { label: 'Slug (z.B. my-plugin)', key: 'slug' },
+                      { label: 'Slug (e.g. my-plugin)', key: 'slug' },
                       { label: 'Name', key: 'name' },
-                      { label: 'Tag (z.B. FX · Dynamics)', key: 'tag' },
+                      { label: 'Tag (e.g. FX · Dynamics)', key: 'tag' },
                       { label: 'Version', key: 'version' },
                       { label: 'Short Description', key: 'shortDescription' },
                       { label: 'Download URL', key: 'downloadUrl' },
@@ -713,12 +808,8 @@ export default function AdminPage() {
                         value={newPlugin[field.key]}
                         onChange={e => setNewPlugin({ ...newPlugin, [field.key]: e.target.value })}
                         style={{
-                          background: '#080808',
-                          border: 'none',
-                          padding: '0.9rem 1.2rem',
-                          color: '#ffffff',
-                          fontSize: '0.85rem',
-                          outline: 'none',
+                          background: '#080808', border: 'none', padding: '0.9rem 1.2rem',
+                          color: '#ffffff', fontSize: '0.85rem', outline: 'none',
                           fontFamily: 'inherit',
                         }}
                       />
@@ -730,14 +821,9 @@ export default function AdminPage() {
                       onChange={e => setNewPlugin({ ...newPlugin, description: e.target.value })}
                       rows={4}
                       style={{
-                        background: '#080808',
-                        border: 'none',
-                        padding: '0.9rem 1.2rem',
-                        color: '#ffffff',
-                        fontSize: '0.85rem',
-                        outline: 'none',
-                        fontFamily: 'inherit',
-                        resize: 'none',
+                        background: '#080808', border: 'none', padding: '0.9rem 1.2rem',
+                        color: '#ffffff', fontSize: '0.85rem', outline: 'none',
+                        fontFamily: 'inherit', resize: 'none',
                       }}
                     />
                     <textarea
@@ -747,33 +833,18 @@ export default function AdminPage() {
                       onChange={e => setNewPlugin({ ...newPlugin, features: e.target.value })}
                       rows={3}
                       style={{
-                        background: '#080808',
-                        border: 'none',
-                        padding: '0.9rem 1.2rem',
-                        color: '#ffffff',
-                        fontSize: '0.85rem',
-                        outline: 'none',
-                        fontFamily: 'inherit',
-                        resize: 'none',
+                        background: '#080808', border: 'none', padding: '0.9rem 1.2rem',
+                        color: '#ffffff', fontSize: '0.85rem', outline: 'none',
+                        fontFamily: 'inherit', resize: 'none',
                       }}
                     />
                   </div>
 
-                  <button
-                    type="submit"
-                    style={{
-                      background: '#ffffff',
-                      border: 'none',
-                      borderRadius: '8px',
-                      padding: '0.9rem 1.5rem',
-                      color: '#080808',
-                      fontWeight: '600',
-                      fontSize: '0.9rem',
-                      cursor: 'pointer',
-                      fontFamily: 'inherit',
-                      width: '100%',
-                    }}
-                  >
+                  <button type="submit" style={{
+                    background: '#ffffff', border: 'none', borderRadius: '8px',
+                    padding: '0.9rem 1.5rem', color: '#080808', fontWeight: '600',
+                    fontSize: '0.9rem', cursor: 'pointer', fontFamily: 'inherit', width: '100%',
+                  }}>
                     Add Plugin →
                   </button>
                 </form>
