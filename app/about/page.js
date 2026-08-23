@@ -4,30 +4,24 @@ import ParticleBackground from '../components/ParticleBackground'
 import { useState } from 'react'
 
 export default function AboutPage() {
-	const [formData, setFormData] = useState({ name: '', email: '', message: '' })
-	const [sent, setSent] = useState(false)
-	const [loading, setLoading] = useState(false)
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' })
+  const [sent, setSent] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
-
       const data = await res.json()
-
-      if (data.success) {
-        setSent(true)
-      }
+      if (data.success) setSent(true)
     } catch (err) {
       console.error(err)
     }
-
     setLoading(false)
   }
 
@@ -107,20 +101,19 @@ export default function AboutPage() {
               },
               {
                 title: 'Quality First',
-                desc: 'Each plugin is built to professional standards. If it\'s not good enough, it doesn\'t ship.',
+                desc: "Each plugin is built to professional standards. If it's not good enough, it doesn't ship.",
               },
               {
                 title: 'Built for Producers',
                 desc: 'Designed specifically for Rap, Trap & HipHop workflows. Nothing generic.',
               },
             ].map((item, i) => (
-              <div key={i} style={{
-                background: '#080808',
-                padding: '1.8rem 2rem',
-                transition: 'background 0.2s ease',
-              }}
-              onMouseEnter={e => e.currentTarget.style.background = '#0f0f0f'}
-              onMouseLeave={e => e.currentTarget.style.background = '#080808'}>
+              <div
+                key={i}
+                style={{ background: '#080808', padding: '1.8rem 2rem', transition: 'background 0.2s ease' }}
+                onMouseEnter={e => e.currentTarget.style.background = '#0f0f0f'}
+                onMouseLeave={e => e.currentTarget.style.background = '#080808'}
+              >
                 <h3 style={{
                   color: '#ffffff',
                   fontSize: '0.95rem',
@@ -130,16 +123,172 @@ export default function AboutPage() {
                 }}>
                   {item.title}
                 </h3>
-                <p style={{
-                  color: '#444',
-                  fontSize: '0.85rem',
-                  lineHeight: 1.6,
-                }}>
+                <p style={{ color: '#444', fontSize: '0.85rem', lineHeight: 1.6, margin: 0 }}>
                   {item.desc}
                 </p>
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Divider */}
+        <div style={{ height: '1px', background: '#1a1a1a', marginBottom: '4rem' }} />
+
+        {/* Follow on Instagram */}
+        <div style={{ marginBottom: '5rem' }}>
+          <p style={{
+            color: '#444',
+            fontSize: '0.75rem',
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            marginBottom: '1rem',
+          }}>
+            Stay updated
+          </p>
+          <h2 style={{
+            color: '#ffffff',
+            fontSize: '1.8rem',
+            fontWeight: '700',
+            letterSpacing: '-0.02em',
+            marginBottom: '0.8rem',
+          }}>
+            Follow on Instagram
+          </h2>
+          <p style={{
+            color: '#444',
+            fontSize: '0.85rem',
+            lineHeight: 1.7,
+            marginBottom: '1.8rem',
+            maxWidth: '480px',
+          }}>
+            Updates, previews and behind the scenes of new plugins.
+            Follow to stay in the loop.
+          </p>
+
+          <a
+            href="https://instagram.com/vstbymoq"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: 'none' }}
+          >
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '1rem',
+                background: '#0f0f0f',
+                border: '1px solid #1a1a1a',
+                borderRadius: '12px',
+                padding: '1rem 1.5rem',
+                transition: 'border-color 0.2s ease, background 0.2s ease',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = '#333'
+                e.currentTarget.style.background = '#141414'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = '#1a1a1a'
+                e.currentTarget.style.background = '#0f0f0f'
+              }}
+            >
+              {/* Instagram Icon */}
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r="0.5" fill="#ffffff"/>
+              </svg>
+              <div>
+                <p style={{ color: '#ffffff', fontSize: '0.9rem', fontWeight: '600', margin: 0 }}>
+                  @vstbymoq
+                </p>
+                <p style={{ color: '#444', fontSize: '0.75rem', margin: '0.2rem 0 0' }}>
+                  instagram.com/vstbymoq
+                </p>
+              </div>
+              <span style={{ color: '#333', marginLeft: '0.5rem' }}>→</span>
+            </div>
+          </a>
+        </div>
+
+        {/* Divider */}
+        <div style={{ height: '1px', background: '#1a1a1a', marginBottom: '4rem' }} />
+
+        {/* Support Section */}
+        <div style={{ marginBottom: '5rem' }}>
+          <p style={{
+            color: '#444',
+            fontSize: '0.75rem',
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            marginBottom: '1rem',
+          }}>
+            Support the project
+          </p>
+          <h2 style={{
+            color: '#ffffff',
+            fontSize: '1.8rem',
+            fontWeight: '700',
+            letterSpacing: '-0.02em',
+            marginBottom: '0.8rem',
+          }}>
+            Buy moq a coffee
+          </h2>
+          <p style={{
+            color: '#444',
+            fontSize: '0.85rem',
+            lineHeight: 1.7,
+            marginBottom: '1.8rem',
+            maxWidth: '480px',
+          }}>
+            All plugins are free and will stay free forever.
+            If you enjoy using them and want to support the work,
+            donations are always appreciated – no pressure at all.
+          </p>
+
+          <a
+            href="https://paypal.me/armerkeanu"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: 'none' }}
+          >
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '1rem',
+                background: '#0f0f0f',
+                border: '1px solid #1a1a1a',
+                borderRadius: '12px',
+                padding: '1rem 1.5rem',
+                transition: 'border-color 0.2s ease, background 0.2s ease',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = '#333'
+                e.currentTarget.style.background = '#141414'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = '#1a1a1a'
+                e.currentTarget.style.background = '#0f0f0f'
+              }}
+            >
+              {/* PayPal Icon */}
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M7 4h8.5C17.5 4 19 5.5 18.5 8c-.5 2.5-2.5 4-5 4H11l-1 5H7L7 4z" stroke="#ffffff" strokeWidth="1.5" strokeLinejoin="round"/>
+                <path d="M10 12l-1.5 7" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
+              <div>
+                <p style={{ color: '#ffffff', fontSize: '0.9rem', fontWeight: '600', margin: 0 }}>
+                  Donate via PayPal
+                </p>
+                <p style={{ color: '#444', fontSize: '0.75rem', margin: '0.2rem 0 0' }}>
+                  paypal.me/armerkeanu
+                </p>
+              </div>
+              <span style={{ color: '#333', marginLeft: '0.5rem' }}>→</span>
+            </div>
+          </a>
         </div>
 
         {/* Divider */}
@@ -198,7 +347,7 @@ export default function AboutPage() {
               }}>
                 Message sent ✓
               </p>
-              <p style={{ color: '#444', fontSize: '0.85rem' }}>
+              <p style={{ color: '#444', fontSize: '0.85rem', margin: 0 }}>
                 We'll get back to you as soon as possible.
               </p>
             </div>
@@ -212,7 +361,6 @@ export default function AboutPage() {
               borderRadius: '12px',
               overflow: 'hidden',
             }}>
-              {/* Name */}
               <input
                 type="text"
                 placeholder="Name"
@@ -220,20 +368,12 @@ export default function AboutPage() {
                 value={formData.name}
                 onChange={e => setFormData({ ...formData, name: e.target.value })}
                 style={{
-                  background: '#080808',
-                  border: 'none',
-                  padding: '1.2rem 1.5rem',
-                  color: '#ffffff',
-                  fontSize: '0.9rem',
-                  outline: 'none',
-                  fontFamily: 'inherit',
-                  transition: 'background 0.2s ease',
+                  background: '#080808', border: 'none', padding: '1.2rem 1.5rem',
+                  color: '#ffffff', fontSize: '0.9rem', outline: 'none', fontFamily: 'inherit',
                 }}
-                onFocus={e => e.target.style.background = '#0f0f0f'}
-                onBlur={e => e.target.style.background = '#080808'}
+                onFocus={e => e.currentTarget.style.background = '#0f0f0f'}
+                onBlur={e => e.currentTarget.style.background = '#080808'}
               />
-
-              {/* Email */}
               <input
                 type="email"
                 placeholder="Email"
@@ -241,20 +381,12 @@ export default function AboutPage() {
                 value={formData.email}
                 onChange={e => setFormData({ ...formData, email: e.target.value })}
                 style={{
-                  background: '#080808',
-                  border: 'none',
-                  padding: '1.2rem 1.5rem',
-                  color: '#ffffff',
-                  fontSize: '0.9rem',
-                  outline: 'none',
-                  fontFamily: 'inherit',
-                  transition: 'background 0.2s ease',
+                  background: '#080808', border: 'none', padding: '1.2rem 1.5rem',
+                  color: '#ffffff', fontSize: '0.9rem', outline: 'none', fontFamily: 'inherit',
                 }}
-                onFocus={e => e.target.style.background = '#0f0f0f'}
-                onBlur={e => e.target.style.background = '#080808'}
+                onFocus={e => e.currentTarget.style.background = '#0f0f0f'}
+                onBlur={e => e.currentTarget.style.background = '#080808'}
               />
-
-              {/* Message */}
               <textarea
                 placeholder="Message"
                 required
@@ -262,42 +394,27 @@ export default function AboutPage() {
                 value={formData.message}
                 onChange={e => setFormData({ ...formData, message: e.target.value })}
                 style={{
-                  background: '#080808',
-                  border: 'none',
-                  padding: '1.2rem 1.5rem',
-                  color: '#ffffff',
-                  fontSize: '0.9rem',
-                  outline: 'none',
-                  fontFamily: 'inherit',
-                  resize: 'none',
-                  transition: 'background 0.2s ease',
+                  background: '#080808', border: 'none', padding: '1.2rem 1.5rem',
+                  color: '#ffffff', fontSize: '0.9rem', outline: 'none',
+                  fontFamily: 'inherit', resize: 'none',
                 }}
-                onFocus={e => e.target.style.background = '#0f0f0f'}
-                onBlur={e => e.target.style.background = '#080808'}
+                onFocus={e => e.currentTarget.style.background = '#0f0f0f'}
+                onBlur={e => e.currentTarget.style.background = '#080808'}
               />
-
-              {/* Submit */}
-           <button
-  type="submit"
-  disabled={loading}
-  style={{
-    background: '#ffffff',
-    border: 'none',
-    padding: '1.2rem 1.5rem',
-    color: '#080808',
-    fontSize: '0.9rem',
-    fontWeight: '600',
-    cursor: loading ? 'not-allowed' : 'pointer',
-    fontFamily: 'inherit',
-    opacity: loading ? 0.7 : 1,
-    transition: 'background 0.2s ease',
-    letterSpacing: '0.03em',
-  }}
-  onMouseEnter={e => { if (!loading) e.target.style.background = '#e0e0e0' }}
-  onMouseLeave={e => e.target.style.background = '#ffffff'}
->
-  {loading ? 'Sending...' : 'Send Message →'}
-</button>
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  background: '#ffffff', border: 'none', padding: '1.2rem 1.5rem',
+                  color: '#080808', fontSize: '0.9rem', fontWeight: '600',
+                  cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'inherit',
+                  opacity: loading ? 0.7 : 1, transition: 'background 0.2s ease',
+                }}
+                onMouseEnter={e => { if (!loading) e.currentTarget.style.background = '#e0e0e0' }}
+                onMouseLeave={e => e.currentTarget.style.background = '#ffffff'}
+              >
+                {loading ? 'Sending...' : 'Send Message →'}
+              </button>
             </form>
           )}
         </div>
