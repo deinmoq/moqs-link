@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import ParticleBackground from '../../components/ParticleBackground'
 
 export default function ParticleBackground() {
   const canvasRef = useRef(null)
