@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/webmail",
+      "destination": "https://webmail.opusx.de",
+      "permanent": true
+    }
+  ]
+}
