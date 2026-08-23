@@ -132,8 +132,8 @@ export default function Navbar() {
             letterSpacing: '0.05em',
             transition: 'color 0.2s ease',
           }}
-          onMouseEnter={e => (e.target as HTMLElement).style.color = '#fff'}
-          onMouseLeave={e => (e.target as HTMLElement).style.color = '#666'}>
+          onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+		  onMouseLeave={e => e.currentTarget.style.color = '#666'}
             About
           </Link>
 
@@ -150,8 +150,8 @@ export default function Navbar() {
               letterSpacing: '0.03em',
               transition: 'all 0.2s ease',
             }}
-            onMouseEnter={e => (e.target as HTMLElement).style.background = '#e0e0e0'}
-            onMouseLeave={e => (e.target as HTMLElement).style.background = '#ffffff'}>
+			onMouseEnter={e => e.currentTarget.style.background = '#e0e0e0'}
+			onMouseLeave={e => e.currentTarget.style.background = '#ffffff'}
               Get Plugins
             </button>
           </Link>

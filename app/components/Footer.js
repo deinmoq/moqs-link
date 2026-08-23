@@ -68,14 +68,18 @@ export default function Footer() {
               { label: 'Impressum', href: '/impressum' },
               { label: 'Datenschutz', href: '/datenschutz' },
             ].map(link => (
-              <Link key={link.href} href={link.href} style={{
-                color: '#333',
-                textDecoration: 'none',
-                fontSize: '0.8rem',
-                transition: 'color 0.2s ease',
-              }}
-              onMouseEnter={e => e.currentTarget.style.color = '#fff'}
-onMouseLeave={e => e.currentTarget.style.color = '#333'}
+              <Link
+                key={link.href}
+                href={link.href}
+                style={{
+                  color: '#333',
+                  textDecoration: 'none',
+                  fontSize: '0.8rem',
+                  transition: 'color 0.2s ease',
+                }}
+                onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+                onMouseLeave={e => e.currentTarget.style.color = '#333'}
+              >
                 {link.label}
               </Link>
             ))}
