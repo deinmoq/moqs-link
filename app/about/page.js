@@ -134,6 +134,194 @@ export default function AboutPage() {
         {/* Divider */}
         <div style={{ height: '1px', background: '#1a1a1a', marginBottom: '4rem' }} />
 
+        {/* Transparency Section */}
+        <div style={{ marginBottom: '5rem' }}>
+          <p style={{
+            color: '#444',
+            fontSize: '0.75rem',
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            marginBottom: '1rem',
+          }}>
+            Transparency
+          </p>
+          <h2 style={{
+            color: '#ffffff',
+            fontSize: '1.8rem',
+            fontWeight: '700',
+            letterSpacing: '-0.02em',
+            marginBottom: '0.8rem',
+          }}>
+            One person. Real work.
+          </h2>
+          <p style={{
+            color: '#444',
+            fontSize: '0.85rem',
+            lineHeight: 1.8,
+            marginBottom: '1.5rem',
+            maxWidth: '560px',
+          }}>
+            This entire project – the plugins, the website, the designs – is run by
+            one person. To keep up with everything, AI is used as a tool in parts of
+            the process: for website code, visual designs and some written content.
+          </p>
+          <p style={{
+            color: '#444',
+            fontSize: '0.85rem',
+            lineHeight: 1.8,
+            marginBottom: '2rem',
+            maxWidth: '560px',
+          }}>
+            The plugin concepts, sound design decisions and everything that actually
+            matters musically are done by hand. AI helps with the parts that would
+            otherwise eat up all the time – so more energy can go into building
+            better tools for producers.
+          </p>
+
+          {/* Info Cards */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1px',
+            background: '#1a1a1a',
+            border: '1px solid #1a1a1a',
+            borderRadius: '12px',
+            overflow: 'hidden',
+          }}>
+            {[
+              {
+                icon: '🤖',
+                title: 'AI-assisted',
+                desc: 'Parts of the website, designs and written content are created with AI support.',
+              },
+              {
+                icon: '🎛️',
+                title: 'Handcrafted audio',
+                desc: 'All plugin concepts, DSP decisions and sound design are done by moq personally.',
+              },
+              {
+                icon: '👤',
+                title: 'Solo project',
+                desc: 'No team, no agency. One person building and maintaining everything.',
+              },
+            ].map((item, i) => (
+              <div
+                key={i}
+                style={{
+                  background: '#080808',
+                  padding: '1.5rem 2rem',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '1.2rem',
+                  transition: 'background 0.2s ease',
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = '#0f0f0f'}
+                onMouseLeave={e => e.currentTarget.style.background = '#080808'}
+              >
+                <span style={{ fontSize: '1.2rem', flexShrink: 0, marginTop: '0.1rem' }}>
+                  {item.icon}
+                </span>
+                <div>
+                  <h3 style={{
+                    color: '#ffffff',
+                    fontSize: '0.9rem',
+                    fontWeight: '600',
+                    marginBottom: '0.3rem',
+                    margin: '0 0 0.3rem',
+                  }}>
+                    {item.title}
+                  </h3>
+                  <p style={{ color: '#444', fontSize: '0.85rem', lineHeight: 1.6, margin: 0 }}>
+                    {item.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div style={{ height: '1px', background: '#1a1a1a', marginBottom: '4rem' }} />
+
+        {/* Community Section */}
+        <div style={{ marginBottom: '5rem' }}>
+          <p style={{
+            color: '#444',
+            fontSize: '0.75rem',
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            marginBottom: '1rem',
+          }}>
+            Community
+          </p>
+          <h2 style={{
+            color: '#ffffff',
+            fontSize: '1.8rem',
+            fontWeight: '700',
+            letterSpacing: '-0.02em',
+            marginBottom: '0.8rem',
+          }}>
+            Be part of it
+          </h2>
+          <p style={{
+            color: '#444',
+            fontSize: '0.85rem',
+            lineHeight: 1.8,
+            marginBottom: '1.8rem',
+            maxWidth: '520px',
+          }}>
+            Community contributions make this project better for everyone.
+            Videos, tutorials, plugin showcases, artwork or feedback – all of it
+            is welcome. Tag{' '}
+            <a
+              href="https://instagram.com/vstbymoq"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#666', textDecoration: 'none', borderBottom: '1px solid #333' }}
+            >
+              @vstbymoq
+            </a>
+            {' '}on Instagram or reach out directly.
+          </p>
+
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1px',
+            background: '#1a1a1a',
+            border: '1px solid #1a1a1a',
+            borderRadius: '12px',
+            overflow: 'hidden',
+          }}>
+            {[
+              { icon: '🎬', label: 'Plugin demos & tutorials' },
+              { icon: '🎨', label: 'Artwork & visual content' },
+              { icon: '🎵', label: 'Tracks made with moqs plugins' },
+              { icon: '💬', label: 'Feedback & feature requests' },
+            ].map((item, i) => (
+              <div
+                key={i}
+                style={{
+                  background: '#080808',
+                  padding: '1.2rem 2rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1rem',
+                  transition: 'background 0.2s ease',
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = '#0f0f0f'}
+                onMouseLeave={e => e.currentTarget.style.background = '#080808'}
+              >
+                <span style={{ fontSize: '1rem', flexShrink: 0 }}>{item.icon}</span>
+                <span style={{ color: '#666', fontSize: '0.9rem' }}>{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div style={{ height: '1px', background: '#1a1a1a', marginBottom: '4rem' }} />
+
         {/* Follow on Instagram */}
         <div style={{ marginBottom: '5rem' }}>
           <p style={{
@@ -192,7 +380,6 @@ export default function AboutPage() {
                 e.currentTarget.style.background = '#0f0f0f'
               }}
             >
-              {/* Instagram Icon */}
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
                 <circle cx="12" cy="12" r="4"/>
@@ -273,7 +460,6 @@ export default function AboutPage() {
                 e.currentTarget.style.background = '#0f0f0f'
               }}
             >
-              {/* PayPal Icon */}
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <path d="M7 4h8.5C17.5 4 19 5.5 18.5 8c-.5 2.5-2.5 4-5 4H11l-1 5H7L7 4z" stroke="#ffffff" strokeWidth="1.5" strokeLinejoin="round"/>
                 <path d="M10 12l-1.5 7" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round"/>
@@ -339,12 +525,7 @@ export default function AboutPage() {
               padding: '2rem',
               textAlign: 'center',
             }}>
-              <p style={{
-                color: '#ffffff',
-                fontSize: '1rem',
-                fontWeight: '600',
-                marginBottom: '0.5rem',
-              }}>
+              <p style={{ color: '#ffffff', fontSize: '1rem', fontWeight: '600', marginBottom: '0.5rem' }}>
                 Message sent ✓
               </p>
               <p style={{ color: '#444', fontSize: '0.85rem', margin: 0 }}>
