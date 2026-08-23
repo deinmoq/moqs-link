@@ -6,7 +6,7 @@ import Footer from './components/Footer'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'MOQS – Free VST3 Plugins',
+  title: 'moq – Free VST3 Plugins',
   description: 'Free VST3 Plugins for Rap, Trap & HipHop Producers.',
 }
 
